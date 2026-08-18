@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "nama": "Ford Mustang",
+    "keterangan": "Mobil sport dengan desain agresif dan mesin bertenaga.",
+    "gambar": "https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?auto=format&fit=crop&w=900&q=80",
+    "link": "https://www.ford.com/mustang/"
+  },
+  {
+    "id": 2,
+    "nama": "Toyota Supra",
+    "keterangan": "Mobil performa tinggi dengan karakter sporty dan modern.",
+    "gambar": "https://images.unsplash.com/photo-1559416523-140ddc3d238c?auto=format&fit=crop&w=900&q=80",
+    "link": "https://www.toyota.com/grsupra/"
+  }
+]
