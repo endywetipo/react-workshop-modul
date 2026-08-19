@@ -1,25 +1,92 @@
 # React Workshop — Modul Pemrograman Web
 
-Proyek ini adalah implementasi rapi dan siap jalan dari materi **Workshop Pemrograman Web dengan React JS**. Seluruh latihan disatukan dalam satu dashboard interaktif agar setiap konsep dapat dipelajari melalui navigasi modul di sisi kiri.
+Proyek ini adalah implementasi materi **Workshop Pemrograman Web dengan React JS** dalam satu dashboard interaktif. Materi mencakup JSX, component, props, array, event handling, state, conditional rendering, form, parent-child, CRUD state, dan CRUD API PHP.
 
 ## Kebutuhan sistem
 
-Pastikan komputer telah memiliki **Node.js versi 18 atau lebih baru** dan npm. Tidak ada database atau API eksternal yang wajib disiapkan untuk menjalankan versi frontend ini.
+Untuk frontend, gunakan **Node.js 18 atau lebih baru** dan npm. Untuk mode API permanen lokal, gunakan **PHP 8 atau lebih baru**. GitHub Pages hanya menjalankan frontend statis; PHP harus dijalankan pada server PHP atau komputer lokal.
 
-## Menjalankan proyek
+## Menjalankan frontend saja
 
 ```bash
 npm install
 npm start
 ```
 
-Setelah server aktif, buka alamat yang ditampilkan oleh Vite, biasanya `http://localhost:5173`.
+Buka alamat Vite, biasanya:
 
-Untuk membuat build produksi:
+```text
+http://localhost:5173
+```
+
+Mode default adalah **Mode State Lokal**. Perubahan tambah, edit, hapus, dan quantity hanya tersimpan selama halaman sedang terbuka.
+
+## Menjalankan backend PHP
+
+Buka terminal kedua dari folder root proyek, lalu jalankan:
+
+```bash
+php -S localhost:8000 -t backend-php
+```
+
+Endpoint API:
+
+```text
+http://localhost:8000/products.php
+```
+
+Biarkan terminal PHP tetap terbuka. Jika endpoint dapat dibuka dan menampilkan JSON produk, backend sudah aktif.
+
+## Menggunakan CRUD permanen melalui API PHP
+
+1. Jalankan backend PHP pada port `8000`.
+2. Jalankan frontend dengan `npm start`.
+3. Buka `http://localhost:5173`.
+4. Pilih modul **coba08 — CRUD dengan API PHP**.
+5. Klik tombol **Mode State Lokal** sampai berubah menjadi **Mode API PHP**.
+6. Aplikasi akan mengambil data dari `products.php`.
+7. Tambah, edit, atau hapus produk.
+8. Data akan ditulis ke `backend-php/products.json` melalui endpoint PHP.
+9. Refresh halaman atau matikan dan nyalakan kembali server; data API tetap ada selama file `products.json` tidak dihapus.
+
+Frontend menggunakan URL API berikut secara default:
+
+```text
+http://localhost:8000/products.php
+```
+
+Untuk server PHP online, buat file `.env` pada root proyek:
+
+```env
+VITE_API_BASE_URL=https://domain-php-anda.com/products.php
+```
+
+Kemudian build ulang frontend:
 
 ```bash
 npm run build
-npm run preview
+```
+
+Pastikan server PHP online mengizinkan CORS dari domain frontend dan memiliki izin tulis pada `products.json`.
+
+## Kontrak endpoint API
+
+| Method | URL | Fungsi |
+|---|---|---|
+| GET | `/products.php` | Mengambil semua produk |
+| POST | `/products.php` | Menambah produk |
+| PUT | `/products.php?id=1` | Mengubah produk berdasarkan ID |
+| DELETE | `/products.php?id=1` | Menghapus produk berdasarkan ID |
+
+Contoh body JSON untuk `POST` dan `PUT`:
+
+```json
+{
+  "nama": "Honda Civic",
+  "keterangan": "Sedan sporty untuk data latihan.",
+  "gambar": "https://example.com/civic.jpg",
+  "link": "https://example.com"
+}
 ```
 
 ## Struktur folder
@@ -29,52 +96,55 @@ react-workshop/
 ├── backend-php/
 │   ├── config.php
 │   ├── products.php
+│   ├── products.json
 │   └── README.md
 ├── public/
 ├── src/
-│   ├── components/
 │   ├── data/
 │   │   └── workshopData.js
+│   ├── api.js
 │   ├── App.jsx
 │   ├── App.css
 │   └── main.jsx
 ├── index.html
 ├── package.json
+├── vite.config.js
 └── README.md
 ```
 
-Folder `components/` disiapkan untuk pemisahan komponen lanjutan. Pada versi ini komponen demo yang saling berkaitan berada di `App.jsx` agar mudah dibandingkan dengan contoh modul, sementara data dipisahkan di `src/data/workshopData.js`.
-
 ## Pemetaan materi modul
 
-| Bab | Implementasi dalam aplikasi |
+| Materi | Implementasi |
 |---|---|
-| coba01 | Variabel `nama`, JSX, dan rendering elemen React |
+| coba01 | Variabel, JSX, dan rendering elemen React |
 | coba02 | Functional component, styling, dan kartu nilai |
-| coba02b/c | Props, reusable component, array, dan `map()` |
+| coba02c | Props, reusable component, array, dan `map()` |
 | coba03 | Event handler `onClick` |
 | coba03b | `useState` melalui demo counter |
-| coba03c | Conditional rendering berdasarkan nilai state |
-| coba04 | Project quantity/keranjang dengan event, state, dan conditional |
+| coba03c | Conditional rendering: if, ternary, dan short-circuit |
+| coba04 | Quantity keranjang dengan event, state, dan conditional |
 | coba05 | Controlled form, `onChange`, destructuring, dan spread operator |
 | coba06 | Parent-child communication dan method as props |
-| coba07 | CRUD dengan state: tambah, edit, hapus, dan tampil data |
-| coba08/coba09 | Simulasi mode API dan backend PHP sederhana di folder `backend-php/` |
+| coba07 | CRUD lokal dengan state |
+| coba08 | CRUD permanen melalui API PHP dan `products.json` |
 
-## Catatan mode API PHP
+## Catatan hosting
 
-Frontend dapat dijalankan tanpa PHP melalui mode state lokal. Jika ingin mencoba backend PHP, jalankan dari root proyek:
+Website frontend dapat di-host di GitHub Pages pada:
 
-```bash
-php -S localhost:8000 -t backend-php
+```text
+https://endywetipo.github.io/react-workshop-modul/
 ```
 
-Endpoint tersedia di `http://localhost:8000/products.php`. Detail kontrak endpoint terdapat pada `backend-php/README.md`.
+Namun GitHub Pages **tidak menjalankan PHP**. Karena itu, mode API PHP permanen pada website online memerlukan hosting PHP terpisah, misalnya shared hosting/cPanel yang mendukung PHP, lalu nilai `VITE_API_BASE_URL` diarahkan ke endpoint PHP online tersebut. Jika backend belum di-host online, gunakan mode API PHP secara lokal.
 
-## Fitur yang tersedia
+## Build dan preview produksi
 
-Aplikasi mencakup navigasi antar latihan, progress modul, contoh data siswa, kartu produk dengan props, quantity keranjang, form controlled, komunikasi parent-child, serta CRUD produk yang dapat diuji langsung. Desain sudah responsif untuk layar desktop dan mobile.
+```bash
+npm run build
+npm run preview
+```
 
-## Lisensi dan sumber materi
+## Sumber materi
 
-Kode ini dibuat sebagai proyek pembelajaran berdasarkan modul PDF yang diberikan pengguna. Gambar produk menggunakan URL gambar publik Unsplash dan hanya dipakai sebagai data demo.
+Kode ini dibuat sebagai proyek pembelajaran berdasarkan modul PDF yang diberikan. Contoh gambar produk menggunakan URL publik Unsplash dan hanya digunakan sebagai data demo.

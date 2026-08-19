@@ -39,5 +39,5 @@ export const lessons = [
   { id: 'coba05', title: 'Form & onChange', description: 'Form controlled, destructuring, dan spread operator.' },
   { id: 'coba06', title: 'Parent & Child', description: 'Mengirim method dari parent ke child melalui props.' },
   { id: 'coba07', title: 'CRUD dengan State', description: 'Tambah, tampil, ubah, dan hapus data menggunakan state.' },
-  { id: 'coba08', title: 'CRUD dengan API PHP', description: 'Simulasi pola CRUD API melalui service layer.' }
+  { id: 'coba08', title: 'CRUD dengan API PHP', description: 'CRUD terhubung ke endpoint PHP dan disimpan ke products.json.' }
 ];

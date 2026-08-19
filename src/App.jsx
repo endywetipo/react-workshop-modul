@@ -51,11 +51,49 @@ function CrudDemo() {
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({ nama: '', keterangan: '', gambar: '', link: '' });
   const [apiMode, setApiMode] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [apiMessage, setApiMessage] = useState('');
+  const [apiError, setApiError] = useState('');
+
+  const loadFromApi = async () => {
+    setLoading(true); setApiError(''); setApiMessage('Memuat data dari PHP...');
+    try {
+      const { productsApi } = await import('./api');
+      const data = await productsApi.list();
+      setItems(Array.isArray(data) ? data : data.products || []);
+      setApiMessage('Data berhasil dimuat dari products.php dan akan tersimpan ke products.json.');
+    } catch (error) {
+      setApiError(`API belum tersambung: ${error.message}`);
+      setApiMessage('Frontend tetap menampilkan data contoh agar materi dapat dipelajari.');
+    } finally { setLoading(false); }
+  };
+
+  const toggleApi = () => { const next = !apiMode; setApiMode(next); if (next) loadFromApi(); else { setApiError(''); setApiMessage('Mode State Lokal aktif. Perubahan hanya sementara.'); setItems(productsSeed); } };
   const openAdd = () => { setEditing('new'); setForm({ nama: '', keterangan: '', gambar: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=80', link: '#' }); };
   const openEdit = (item) => { setEditing(item.id); setForm({ nama: item.nama, keterangan: item.keterangan, gambar: item.gambar, link: item.link }); };
-  const save = (event) => { event.preventDefault(); if (editing === 'new') setItems((old) => [...old, { ...form, id: Date.now() }]); else setItems((old) => old.map((x) => x.id === editing ? { ...x, ...form } : x)); setEditing(null); };
-  const remove = (id) => setItems((old) => old.filter((x) => x.id !== id));
-  return <div className="crud-wrap"><div className="crud-toolbar"><div><span className="eyebrow">PROJECT CRUD</span><h2>Daftar produk</h2></div><div className="toolbar-actions"><button className={`toggle ${apiMode ? 'active' : ''}`} onClick={() => setApiMode(!apiMode)}><span /> {apiMode ? 'Mode API PHP' : 'Mode State Lokal'}</button><button className="button button-primary" onClick={openAdd}><Plus size={16} /> Tambah produk</button></div></div>{apiMode && <div className="api-note"><strong>Mode API PHP aktif.</strong> UI ini memakai service layer lokal agar langsung dapat dijalankan. Untuk backend PHP sungguhan, lihat folder <code>backend-php/</code> dan ikuti README.</div>}{editing && <form className="edit-form" onSubmit={save}><div className="form-heading"><h3>{editing === 'new' ? 'Tambah produk' : 'Edit produk'}</h3><button type="button" onClick={() => setEditing(null)}><X /></button></div><div className="form-row"><input placeholder="Nama produk" value={form.nama} onChange={(e) => setForm({ ...form, nama: e.target.value })} required /><input placeholder="Link gambar" value={form.gambar} onChange={(e) => setForm({ ...form, gambar: e.target.value })} required /></div><textarea placeholder="Keterangan produk" value={form.keterangan} onChange={(e) => setForm({ ...form, keterangan: e.target.value })} required /><input placeholder="Link detail" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} required /><button className="button button-primary" type="submit"><Check size={16} /> Simpan</button></form>}<div className="product-grid">{items.map((item) => <ProductCard key={item.id} product={item} onDelete={remove} onEdit={openEdit} />)}</div></div>;
+  const save = async (event) => {
+    event.preventDefault(); setLoading(true); setApiError('');
+    try {
+      if (apiMode) {
+        const { productsApi } = await import('./api');
+        const saved = editing === 'new' ? await productsApi.create(form) : await productsApi.update(editing, form);
+        setItems((old) => editing === 'new' ? [...old, saved] : old.map((x) => x.id === editing ? saved : x));
+        setApiMessage('Berhasil disimpan permanen melalui API PHP.');
+      } else {
+        setItems((old) => editing === 'new' ? [...old, { ...form, id: Date.now() }] : old.map((x) => x.id === editing ? { ...x, ...form } : x));
+        setApiMessage('Tersimpan di state lokal selama halaman ini terbuka.');
+      }
+      setEditing(null);
+    } catch (error) { setApiError(`Gagal menyimpan: ${error.message}`); } finally { setLoading(false); }
+  };
+  const remove = async (id) => {
+    setLoading(true); setApiError('');
+    try {
+      if (apiMode) { const { productsApi } = await import('./api'); await productsApi.remove(id); setApiMessage('Produk berhasil dihapus permanen dari products.json.'); }
+      setItems((old) => old.filter((x) => x.id !== id));
+    } catch (error) { setApiError(`Gagal menghapus: ${error.message}`); } finally { setLoading(false); }
+  };
+  return <div className="crud-wrap"><div className="crud-toolbar"><div><span className="eyebrow">PROJECT CRUD</span><h2>Daftar produk</h2></div><div className="toolbar-actions"><button className={`toggle ${apiMode ? 'active' : ''}`} onClick={toggleApi}><span /> {apiMode ? 'Mode API PHP' : 'Mode State Lokal'}</button><button className="button button-primary" onClick={openAdd}><Plus size={16} /> Tambah produk</button></div></div>{apiMode && <div className="api-note"><strong>Mode API PHP aktif.</strong> Klik mode ini setelah menjalankan `php -S localhost:8000 -t backend-php`. Data CRUD akan dibaca dan disimpan di <code>backend-php/products.json</code>.</div>}{apiMessage && <div className="api-success">{apiMessage}</div>}{apiError && <div className="api-error">{apiError}</div>}{loading && <div className="api-loading">Memproses...</div>}{editing && <form className="edit-form" onSubmit={save}><div className="form-heading"><h3>{editing === 'new' ? 'Tambah produk' : 'Edit produk'}</h3><button type="button" onClick={() => setEditing(null)}><X /></button></div><div className="form-row"><input placeholder="Nama produk" value={form.nama} onChange={(e) => setForm({ ...form, nama: e.target.value })} required /><input placeholder="Link gambar" value={form.gambar} onChange={(e) => setForm({ ...form, gambar: e.target.value })} required /></div><textarea placeholder="Keterangan produk" value={form.keterangan} onChange={(e) => setForm({ ...form, keterangan: e.target.value })} required /><input placeholder="Link detail" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} required /><button className="button button-primary" type="submit" disabled={loading}><Check size={16} /> Simpan</button></form>}<div className="product-grid">{items.map((item) => <ProductCard key={item.id} product={item} onDelete={remove} onEdit={openEdit} />)}</div></div>;
 }
 
 function LessonContent({ id }) {
