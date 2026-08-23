@@ -14,6 +14,7 @@ if ($method === 'POST') {
         'id' => (int) (microtime(true) * 1000),
         'nama' => trim($body['nama'] ?? ''),
         'keterangan' => trim($body['keterangan'] ?? ''),
+        'harga' => (float) ($body['harga'] ?? 0),
         'gambar' => trim($body['gambar'] ?? ''),
         'link' => trim($body['link'] ?? '')
     ];
@@ -32,6 +33,7 @@ if ($method === 'PUT') {
     $products[$index] = array_merge($products[$index], [
         'nama' => trim($body['nama'] ?? $products[$index]['nama']),
         'keterangan' => trim($body['keterangan'] ?? $products[$index]['keterangan']),
+        'harga' => (float) ($body['harga'] ?? $products[$index]['harga'] ?? 0),
         'gambar' => trim($body['gambar'] ?? $products[$index]['gambar']),
         'link' => trim($body['link'] ?? $products[$index]['link'])
     ]);

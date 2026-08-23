@@ -23,4 +23,17 @@ export const productsApi = {
   remove: (id) => request(`?id=${encodeURIComponent(id)}`, { method: 'DELETE' })
 };
 
+const TRANSACTIONS_URL = API_URL.replace(/products\.php$/, 'transactions.php');
+export const transactionsApi = {
+  list: () => requestTo(TRANSACTIONS_URL),
+  create: (transaction) => requestTo(TRANSACTIONS_URL, { method: 'POST', body: JSON.stringify(transaction) })
+};
+
+async function requestTo(url, options = {}) {
+  const response = await fetch(url, { ...options, headers: { 'Content-Type': 'application/json', ...(options.headers || {}) } });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.message || `Request gagal dengan status ${response.status}`);
+  return data;
+}
+
 export { API_URL };

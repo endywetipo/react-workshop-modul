@@ -3,6 +3,7 @@ export const productsSeed = [
     id: 1,
     nama: 'Ford Mustang',
     keterangan: 'Mobil sport dengan desain agresif dan mesin bertenaga.',
+    harga: 1250000000,
     gambar: 'https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?auto=format&fit=crop&w=900&q=80',
     link: 'https://www.ford.com/mustang/'
   },
@@ -10,6 +11,7 @@ export const productsSeed = [
     id: 2,
     nama: 'Toyota Supra',
     keterangan: 'Mobil performa tinggi dengan karakter sporty dan modern.',
+    harga: 1850000000,
     gambar: 'https://images.unsplash.com/photo-1559416523-140ddc3d238c?auto=format&fit=crop&w=900&q=80',
     link: 'https://www.toyota.com/grsupra/'
   },
@@ -17,6 +19,7 @@ export const productsSeed = [
     id: 3,
     nama: 'Lamborghini',
     keterangan: 'Ikon otomotif Italia dengan desain eksotis dan elegan.',
+    harga: 3200000000,
     gambar: 'https://images.unsplash.com/photo-1621135802920-133df287f89c?auto=format&fit=crop&w=900&q=80',
     link: 'https://www.lamborghini.com/'
   }
@@ -39,5 +42,6 @@ export const lessons = [
   { id: 'coba05', title: 'Form & onChange', description: 'Form controlled, destructuring, dan spread operator.' },
   { id: 'coba06', title: 'Parent & Child', description: 'Mengirim method dari parent ke child melalui props.' },
   { id: 'coba07', title: 'CRUD dengan State', description: 'Tambah, tampil, ubah, dan hapus data menggunakan state.' },
-  { id: 'coba08', title: 'CRUD dengan API PHP', description: 'CRUD terhubung ke endpoint PHP dan disimpan ke products.json.' }
+  { id: 'coba08', title: 'CRUD dengan API PHP', description: 'CRUD terhubung ke endpoint PHP dan disimpan ke products.json.' },
+  { id: 'kasir', title: 'Web Kasir', description: 'Keranjang global, pembayaran, checkout, dan riwayat transaksi.' }
 ];

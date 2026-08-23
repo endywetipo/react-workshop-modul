@@ -148,3 +148,43 @@ npm run preview
 ## Sumber materi
 
 Kode ini dibuat sebagai proyek pembelajaran berdasarkan modul PDF yang diberikan. Contoh gambar produk menggunakan URL publik Unsplash dan hanya digunakan sebagai data demo.
+
+
+## Web Kasir
+
+Menu Web Kasir menyediakan daftar produk dengan harga, keranjang global, tambah/kurangi quantity, subtotal, total, nama pelanggan, uang bayar, kembalian, checkout, dan riwayat transaksi. Keranjang dan riwayat disimpan di `localStorage` agar tetap tersedia setelah refresh pada browser yang sama.
+
+Jalankan backend PHP dan frontend React, lalu pilih menu **Web Kasir**. Produk dibaca dari `products.php`. Saat checkout, aplikasi mencoba mengirim transaksi ke `transactions.php`; jika endpoint transaksi belum aktif, riwayat tetap disimpan di browser sebagai fallback pembelajaran.
+
+Endpoint transaksi:
+
+```text
+GET  http://localhost:8000/transactions.php
+POST http://localhost:8000/transactions.php
+```
+
+Struktur tambahan:
+
+```text
+backend-php/
+├── transactions.php
+└── transactions.json
+
+src/
+└── CashierDemo.jsx
+```
+
+Cara mencoba:
+
+```text
+1. Jalankan PHP pada port 8000.
+2. Jalankan React dengan npm start.
+3. Pilih menu Web Kasir.
+4. Klik Tambah pada produk.
+5. Atur quantity di keranjang.
+6. Masukkan uang bayar.
+7. Klik Checkout.
+8. Periksa riwayat transaksi atau endpoint transactions.php.
+```
+
+Catatan: GitHub Pages tetap hanya menjalankan frontend. Agar transaksi dari semua pengguna tersimpan pada satu tempat online, endpoint PHP harus ditempatkan pada hosting PHP online dan `VITE_API_BASE_URL` diarahkan ke domain tersebut.
