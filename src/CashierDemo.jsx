@@ -21,7 +21,7 @@ export default function CashierDemo() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    productsApi.list().then((data) => setProducts(Array.isArray(data) ? data : data.products || [])).catch(() => setProducts(seedProducts)).finally(() => setLoading(false));
+    productsApi.list().then((data) => { const list = Array.isArray(data) ? data : data.products || []; setProducts(list.length ? list : seedProducts); }).catch(() => setProducts(seedProducts)).finally(() => setLoading(false));
   }, []);
   useEffect(() => localStorage.setItem('cashier-cart', JSON.stringify(cart)), [cart]);
   useEffect(() => localStorage.setItem('cashier-history', JSON.stringify(history)), [history]);
