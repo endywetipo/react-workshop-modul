@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Minus, Plus, Receipt, ShoppingCart, Trash2, Wallet } from 'lucide-react';
 import { productsApi, transactionsApi } from './api';
+import { productsSeed as seedProducts } from './data/workshopData';
 
 const money = (value) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(value);
 const fallbackPrices = { 1: 1250000000, 2: 1850000000, 3: 3200000000 };
@@ -20,7 +21,7 @@ export default function CashierDemo() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    productsApi.list().then((data) => setProducts(Array.isArray(data) ? data : data.products || [])).catch(() => setProducts([])).finally(() => setLoading(false));
+    productsApi.list().then((data) => setProducts(Array.isArray(data) ? data : data.products || [])).catch(() => setProducts(seedProducts)).finally(() => setLoading(false));
   }, []);
   useEffect(() => localStorage.setItem('cashier-cart', JSON.stringify(cart)), [cart]);
   useEffect(() => localStorage.setItem('cashier-history', JSON.stringify(history)), [history]);
